@@ -1,0 +1,28 @@
+const express = require("express")
+const { graphqlHTTP } = require("express-graphql")
+const { buildSchema } = require("graphql")
+
+const schema = buildSchema(`
+    type Query {
+        hello: String
+    }
+`)
+
+const rootValue = {
+  hello: () => {
+    return "Hello World"
+  },
+}
+
+const app = express()
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    rootValue,
+    graphiql: true,
+  })
+)
+
+app.listen(4000)
+console.log("running on http://localhost:4000/graphql")
