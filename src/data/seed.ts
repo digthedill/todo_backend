@@ -1,52 +1,56 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt'
+
 const prisma = new PrismaClient()
+
 
 
 async function main() {
 
+  const password = await bcrypt.hash("testing", 10)
   await prisma.user.createMany({
     data: [
       {
         name: "donald fagan",
         email: "theEmpire@example.com",
         username: "stealtheempire",
-        password: 'testing'
+        password: password
       },
       {
         name: "blue crystal",
         email: "stripper@example.com",
         username: "health__",
-        password: 'testing'
+        password: password
        
       },
       {
         name: "ronald reagan",
         email: "theactor@example.com",
         username: "tickledown",
-        password: 'testing'
+        password: password
        
       }
     ],
     skipDuplicates: true
   })
 
-  // await prisma.task.createMany({
-  //   data: [
-  //     {
-  //       task: "Do the laundry",
-  //       userId: 1
-  //     },
-  //     {
-  //       task: "Do the dishes",
-  //       userId: 1
-  //     },
-  //     {
-  //       task: "Wax chest",
-  //       userId: 2
-  //     },
-  //   ],
-  //   skipDuplicates: true
-  // })
+  await prisma.task.createMany({
+    data: [
+      {
+        task: "Do the laundry",
+        userId: 1
+      },
+      {
+        task: "Do the dishes",
+        userId: 1
+      },
+      {
+        task: "Wax chest",
+        userId: 2
+      },
+    ],
+    skipDuplicates: true
+  })
 
 }
 main()
@@ -58,39 +62,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect
   })
-
-const users = [
-  {
-    name: "donald fagan",
-    email: "theEmpire@example.com",
-    username: "stealtheempire",
-  },
-  {
-    name: "blue crystal",
-    email: "stripper@example.com",
-    username: "health__",
-   
-  },
-  {
-    name: "ronald reagan",
-    email: "theactor@example.com",
-    username: "tickledown",
-   
-  },
-]
-
-const tasks = [
-  {
-    id: 1,
-    task: "Do the laundry",
-  },
-  {
-    id: 2,
-    task: "Do the dishes",
-  },
-  {
-    id: 3,
-    task: "Wax chest",
-  },
-]
-export { users, tasks }

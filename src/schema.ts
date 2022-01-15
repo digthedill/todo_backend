@@ -1,6 +1,13 @@
 import { buildSchema } from "graphql"
 
 const schema = buildSchema(`
+type Mutation {
+  login(username: String!, password: String!): AuthPayload,
+  signup( name: String!,
+          email: String!,
+          username: String!,
+          password: String!): AuthPayload
+}
 
 type Query {
     task(id: Int!): Task,
@@ -18,6 +25,12 @@ type User {
     email: String,
     username: String
 }
-  `)
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+`)
 
 export default schema

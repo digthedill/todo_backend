@@ -1,25 +1,27 @@
-import express, { NextFunction, Request, Response } from "express"
+import express from "express"
 import { graphqlHTTP } from "express-graphql"
+import expressJwt from "express-jwt"
 import resolvers from './resolvers'
 import schema from './schema'
-
-
-// const loggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
-//   console.log({
-//     req  
-//   });
-//   next();
-// } 
-
+import { env } from "./utils/env"
 
 const app = express()
-// app.use(loggingMiddleware)
+
+
+app.use(
+  expressJwt({
+  secret: env('JWT_SECRET'),
+  algorithms: ["HS256"],
+  credentialsRequired: false
+  })
+)
+
 app.use(
   "/graphql",
   graphqlHTTP({
     schema,
     rootValue: resolvers,
-    graphiql: true,
+    graphiql: true
   })
 )
 
