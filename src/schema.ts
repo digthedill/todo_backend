@@ -1,6 +1,7 @@
 import { buildSchema } from "graphql"
 
 const schema = buildSchema(`
+
 type Query {
     task(id: Int!): Task,
     tasks: [Task],

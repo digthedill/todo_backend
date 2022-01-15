@@ -3,16 +3,17 @@ import { graphqlHTTP } from "express-graphql"
 import resolvers from './resolvers'
 import schema from './schema'
 
-const loggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  console.log({
-    req  
-  });
-  next();
-} 
+
+// const loggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
+//   console.log({
+//     req  
+//   });
+//   next();
+// } 
 
 
 const app = express()
-app.use(loggingMiddleware)
+// app.use(loggingMiddleware)
 app.use(
   "/graphql",
   graphqlHTTP({

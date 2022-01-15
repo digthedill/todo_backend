@@ -1,6 +1,9 @@
 {
   "name": "backendtodo",
   "version": "1.0.0",
+  "prisma": {
+    "seed": "ts-node src/data/seed.ts"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {

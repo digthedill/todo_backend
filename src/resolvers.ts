@@ -1,4 +1,9 @@
-import { tasks, users } from "./data/seeds"
+import { tasks, users } from "./data/seed"
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+// seed data through prisma client
+
 
 
 interface taskType {
@@ -13,17 +18,25 @@ interface taskType {
   }
 
 const resolvers = {
-    task: (res: taskType) => {
-      return tasks.find((task) => task.id === res.id)
+    task: (req: taskType) => {
+      return prisma.task.findUnique({
+        where: {
+          id: req.id
+        }
+      })
     },
     tasks: () => {
-      return tasks
+      return prisma.task.findMany()
     },
-    user: (res: userType) => {
-      return users.find((u) => u.id === res.id)
+    user: (req: userType) => {
+        return prisma.user.findUnique({
+          where: {
+            id: req.id
+          }
+        })
     },
-    users: () => {
-      return users
+    users: async() => {
+      return prisma.user.findMany()
     },
   }
 
