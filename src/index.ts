@@ -1,62 +1,23 @@
-import express from "express"
+import express, { NextFunction, Request, Response } from "express"
 import { graphqlHTTP } from "express-graphql"
-import { buildSchema } from "graphql"
-import { tasks, users } from "./data/seeds"
-// import { users, tasks } from "../data/seeds"
+import resolvers from './resolvers'
+import schema from './schema'
 
-const schema = buildSchema(`
+const loggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  console.log({
+    req  
+  });
+  next();
+} 
 
-type Query {
-    task(id: Int!): Task,
-    tasks: [Task],
-    user(id: Int!): User,
-    users: [User]
-  }
-type Task {
-    id: Int,
-    task: String
-}
-type User {
-    id: Int,
-    name: String,
-    email: String,
-    username: String
-}
-  
-  `)
-
-interface taskType {
-  id: number
-  task: string
-}
-interface userType {
-  id: number
-  name: string
-  email: string
-  username: string
-}
-
-const handler = {
-  task: (res: taskType) => {
-    return tasks.find((task) => task.id === res.id)
-  },
-  tasks: () => {
-    return tasks
-  },
-  user: (res: userType) => {
-    return users.find((u) => u.id === res.id)
-  },
-  users: () => {
-    return users
-  },
-}
 
 const app = express()
+app.use(loggingMiddleware)
 app.use(
   "/graphql",
   graphqlHTTP({
     schema,
-    rootValue: handler,
+    rootValue: resolvers,
     graphiql: true,
   })
 )
