@@ -9,6 +9,7 @@ type Mutation {
           password: String!): AuthPayload,
   createTask(task: String!): Task
   editTask(id: Int!, task: String, completed: Boolean): Task
+  deleteTask(id: Int!): Task
 }
 
 type Query {

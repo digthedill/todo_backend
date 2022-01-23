@@ -80,6 +80,18 @@ const resolvers = {
         throw new Error("Couldn't update task")
       }
     },
+    deleteTask: async (args) => {
+      try {
+        const task = await prisma.task.delete({
+          where: {
+            id: args.id
+          }
+        })
+        return task.id
+      } catch (err) {
+        throw new Error("Cannot Delete Task!")
+      }
+    },
     signup: async (args) => {
       try {
         const password: string = await bcrypt.hash(args.password, 10)
@@ -90,7 +102,6 @@ const resolvers = {
           }
         })
         const token = jwt.sign({userId: user.id}, env('JWT_SECRET'))
-  
         return {
           token,
           user
