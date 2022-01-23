@@ -6,7 +6,8 @@ type Mutation {
   signup( name: String!,
           email: String!,
           username: String!,
-          password: String!): AuthPayload
+          password: String!): AuthPayload,
+  createTask(task: String!): Task
 }
 
 type Query {
@@ -17,7 +18,8 @@ type Query {
   }
 type Task {
     id: Int,
-    task: String
+    task: String,
+    completed: Boolean
 }
 type User {
     id: Int,

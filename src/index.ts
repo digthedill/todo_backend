@@ -1,5 +1,6 @@
 import express from "express"
 import { graphqlHTTP } from "express-graphql"
+import cors from 'cors'
 import expressJwt from "express-jwt"
 import resolvers from './resolvers'
 import schema from './schema'
@@ -7,7 +8,7 @@ import { env } from "./utils/env"
 
 const app = express()
 
-
+app.use(cors())
 app.use(
   expressJwt({
   secret: env('JWT_SECRET'),

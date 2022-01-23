@@ -46,6 +46,18 @@ const resolvers = {
 
 
     //MUTATIONS
+    createTask: async (args) => {
+      try {
+        const task = await prisma.task.create({
+          data: {
+            task: args.task
+          }
+        })
+        return task
+      } catch (err) {
+        throw new Error('Unable to create task')
+      }
+    },
     signup: async (args) => {
       try {
         const password: string = await bcrypt.hash(args.password, 10)
