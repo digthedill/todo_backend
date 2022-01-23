@@ -31,7 +31,13 @@ const resolvers = {
       })
     },
     tasks: () => {
-      return prisma.task.findMany()
+      return prisma.task.findMany({
+        orderBy: [
+          {
+            completed: 'asc'
+          }
+        ]
+      })
     },
     user: (req: userType) => {
         return prisma.user.findUnique({
@@ -56,6 +62,22 @@ const resolvers = {
         return task
       } catch (err) {
         throw new Error('Unable to create task')
+      }
+    },
+    editTask:async (args) => {
+      try {
+        const task = await prisma.task.update({
+          where: {
+            id: args.id
+          },
+          data: {
+            task: args.task,
+            completed: args.completed
+          }
+        })
+        return task
+      } catch (err){
+        throw new Error("Couldn't update task")
       }
     },
     signup: async (args) => {
