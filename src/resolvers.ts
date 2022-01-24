@@ -78,22 +78,28 @@ const resolvers = {
             
         const task = await prisma.task.create({
           data: {
-            task: {
-              ...args.task
-            },
-            userId: user.userId,
-          }
+            task: args.task,
+            userId: user.userId            
+          },
+    
         })
         return task
       } catch (err) {
+        console.log(err)
         throw new Error('Unable to create task')
       }
     },
-    editTask:async (args) => {
+    editTask:async (args, ctx) => {
       try {
-        const task = await prisma.task.update({
+        let {user, token} = await ctx()
+        if(!token) {
+          throw new Error("Must be Authenticated to continue")
+        }
+            
+        const task = await prisma.task.updateMany({
           where: {
-            id: args.id
+            id: args.id,
+            userId: user.userId
           },
           data: {
             task: args.task,
@@ -105,14 +111,21 @@ const resolvers = {
         throw new Error("Couldn't update task")
       }
     },
-    deleteTask: async (args) => {
+    deleteTask: async (args, ctx) => {
       try {
-        const task = await prisma.task.delete({
+        let {user, token} = await ctx()
+        if(!token) {
+          throw new Error("Must be Authenticated to continue")
+        }
+        await prisma.task.deleteMany({
           where: {
-            id: args.id
+            id: args.id,
+            userId: user.userId
+            
           }
         })
-        return task.id
+    
+        // return task.id
       } catch (err) {
         throw new Error("Cannot Delete Task!")
       }
@@ -153,7 +166,10 @@ const resolvers = {
 
       const token = jwt.sign({userId: user.id}, env('JWT_SECRET'))
 
-      return {token, user}
+      return {
+        token, 
+        user
+      }
       
     }
 
