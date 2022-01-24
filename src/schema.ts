@@ -7,7 +7,7 @@ type Mutation {
           email: String!,
           username: String!,
           password: String!): AuthPayload,
-  createTask(task: String!): Task
+  createTask(task: String!, userId: Int): Task
   editTask(id: Int!, task: String, completed: Boolean): Task
   deleteTask(id: Int!): Task
 }
@@ -21,13 +21,15 @@ type Query {
 type Task {
     id: Int,
     task: String,
-    completed: Boolean
+    completed: Boolean,
+    user: User!
 }
 type User {
     id: Int,
     name: String,
     email: String,
-    username: String
+    username: String,
+    tasks: [Task]
 }
 
 type AuthPayload {

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { env } from './utils/env'
@@ -21,17 +21,34 @@ interface taskType {
   const authErr = "404! Invalid Username or Password"
 
 const resolvers = {
-
   // QUERY
-    task: (req: taskType) => {
-      return prisma.task.findUnique({
+    task: async (req: taskType, ctx) => {
+      let {user, token} = await ctx()
+      if(!token) {
+        throw new Error("Must be Authenticated to continue")
+      }
+      return prisma.task.findFirst({
         where: {
-          id: req.id
+          userId: user.userId,
+          id: req.id,
+        },
+        include: {
+          user: true
         }
       })
     },
-    tasks: () => {
+    tasks: async (_, ctx, info) => {
+      let {user, token} = await ctx()
+      if(!token) {
+        throw new Error("Must be Authenticated to continue")
+      }
       return prisma.task.findMany({
+        include: {
+          user: true
+        },
+        where: {
+          userId: user.userId
+        },
         orderBy: [
           {
             completed: 'asc'
@@ -52,11 +69,19 @@ const resolvers = {
 
 
     //MUTATIONS
-    createTask: async (args) => {
+    createTask: async (args, ctx) => {
       try {
+        let {user, token} = await ctx()
+        if(!token) {
+          throw new Error("Must be Authenticated to continue")
+        }
+            
         const task = await prisma.task.create({
           data: {
-            task: args.task
+            task: {
+              ...args.task
+            },
+            userId: user.userId,
           }
         })
         return task

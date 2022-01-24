@@ -45,7 +45,7 @@ async function main() {
         userId: 1
       },
       {
-        task: "Wax chest",
+        task: "Wax the car",
         userId: 2
       },
     ],
